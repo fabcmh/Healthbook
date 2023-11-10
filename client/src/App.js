@@ -1,13 +1,24 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
+
+import Home from './pages/Home';
+import Login from './pages/Login'
+import SignUp from './pages/SignUp';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import ProtectedRoutes from './ProtectedRoutes';
 
 function App() {
-
   return (
-    <div>
-
-    </div>
-  )
+    <Router>
+      <Routes>
+        <Route element={<Login />} path="/" />
+        <Route element={<SignUp />} path="/SignUp" />
+        <Route element={<ProtectedRoutes />}>
+          <Route element={<Home />} path="/home" />
+        </Route>
+      </Routes>
+    </Router>
+  );
 }
 
-export default App
+export default App;
 

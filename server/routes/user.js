@@ -6,12 +6,12 @@ const dbo = require("../db/conn");
 const ObjectId = require("mongodb").ObjectId;
 
 // This section will help you get a list of all the records.
-recordRoutes.route("/record").get(async function (req, response) {
+recordRoutes.route("/user").get(async function (req, response) {
   let db_connect = dbo.getDb();
 
   try {
     var records = await db_connect
-      .collection("records")
+      .collection("user")
       .find({})
       .toArray();
     response.json(records);
@@ -33,19 +33,22 @@ recordRoutes.route("/record").get(async function (req, response) {
 //     });
 // });
 
-// // This section will help you create a new record.
-// recordRoutes.route("/record/add").post(function (req, response) {
-//   let db_connect = dbo.getDb();
-//   let myobj = {
-//     name: req.body.name,
-//     position: req.body.position,
-//     level: req.body.level,
-//   };
-//   db_connect.collection("records").insertOne(myobj, function (err, res) {
-//     if (err) throw err;
-//     response.json(res);
-//   });
-// });
+// This section will help you create a new record.
+recordRoutes.route("/user/add").post(function (req, response) {
+  let db_connect = dbo.getDb();
+  let myobj = {
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    email: req.body.email,  
+    password: req.body.password,
+    address: req.body.address,
+    dob: req.body.dob,
+  };
+  db_connect.collection("records").insertOne(myobj, function (err, res) {
+    if (err) throw err;
+    response.json(res);
+  });
+});
 
 // // This section will help you update a record by id.
 // recordRoutes.route("/update/:id").post(function (req, response) {
