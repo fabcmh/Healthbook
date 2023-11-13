@@ -40,7 +40,7 @@ The server folder contains the Node.js server, providing the MongoDB server API 
 
 ## Installation
 1. Clone the repository
-2. Navigate to the project directory
+2. Navigate to the project directory:
 cd client
 3. Install dependencies:
 npm install
