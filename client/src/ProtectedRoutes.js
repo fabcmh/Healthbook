@@ -1,10 +1,13 @@
 import { Outlet, Navigate } from 'react-router-dom'
 
+const useAuth = () => {
+    const loggedIn = sessionStorage.getItem("loggedIn");
+    return loggedIn === "true";
+  };
+
 const ProtectedRoutes = () => {
-    let auth = {'token': false}
-    return(
-        auth.token ? <Outlet/> : <Navigate to="/"/>
-    )
-}
+    const isAuth = useAuth();
+    return isAuth ? <Outlet /> : <Navigate to={"/"} replace />;
+  };
 
 export default ProtectedRoutes

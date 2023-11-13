@@ -1,25 +1,59 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
+import React, { useState } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useNavigate } from "react-router-dom";
+import { Button, Alert, AlertTitle, Grid } from '@mui/material';
+
 
 const defaultTheme = createTheme();
 
 export default function Login() {
-  const handleSubmit = (event) => {
+  let navigate = useNavigate();
+  const [showAlert, setShowAlert] = useState(false)
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    const email = data.get('email');
+    const password = data.get('password');
+
+    console.log({ email, password });
+
+    if (email !== '' && password !== '') {
+      try {
+        const response = await fetch(`http://localhost:5000/user/email=${email}`);
+        const user = await response.json();
+
+        if (!user) {
+          console.log("No entry found");
+        } else {
+          console.log("Entry found");
+
+          // Check if credentials are correct
+          const isCredentialsCorrect =
+            email === user.email && password === user.password;
+
+          if (isCredentialsCorrect) {
+            sessionStorage.setItem("loggedIn", true);
+            sessionStorage.setItem("email", email);
+            setShowAlert(false);
+            navigate("/Home");
+          } else {
+            setShowAlert(true);
+            console.log("Incorrect credentials");
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
   };
+
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -62,7 +96,7 @@ export default function Login() {
                 required
                 fullWidth
                 id="email"
-                label="Email Address"
+                label="Email"
                 name="email"
                 autoComplete="off"
                 autoFocus
@@ -77,6 +111,12 @@ export default function Login() {
                 id="password"
                 autoComplete="off"
               />
+              {
+                showAlert && (<Alert severity="error">
+                  <AlertTitle><strong>Error</strong></AlertTitle>
+                  Email or password is wrong, please try again.
+                </Alert>
+                )}
               <Button
                 type="submit"
                 fullWidth
